@@ -45,29 +45,30 @@
 #define FINISH_POD 1
 
 // BELOW IS BT program TYPE IDENTIFICATION!
-#define LIST_SIZE1 4
+#define LIST_SIZE_BT 4
+
 struct BTProg {
 	int progid;
 	char progname[16]; 
 } ;
 
 
-struct BTProg BTProgList [LIST_SIZE1] = {
+struct BTProg BTProgList [LIST_SIZE_BT] = {
 	{ 1 , "BT WRITE2WATCH"},
 	{ 2 , "BT D/L RESULTS"}, 
 	{ 3, "BT WIPE ALL" },
 	{ 4, "BT WIPE TIMES"},
     };
-/*
+
 // BELOW IS STATION/POD IDENTIFICATION!
-#define LIST_SIZE2 16
+#define LIST_SIZE_PODS 16
 struct podType {
   int block;
   char podID[16]; 
 } ;
 
 
-struct podType podTypeList [LIST_SIZE2] = {
+struct podType podTypeList [LIST_SIZE_PODS] = {
   { 8 , "Stage 1 Start"},
   { 9 , "Stage 1 Finish"}, 
   { 12, "Stage 2 Start" },
@@ -85,9 +86,9 @@ struct podType podTypeList [LIST_SIZE2] = {
   { 36, "Stage 8 Start" },
   { 37, "Stage 8 Finish"},
     };
-*/        
+       
 // variouse values
-#define CONFIG_TYME_MS 10000  
+#define CONFIG_TIME_MS 10000  
 // int main()
 // {
 //     printf("Hello World\n");

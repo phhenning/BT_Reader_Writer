@@ -8,7 +8,7 @@
 #include <LCD5110_Graph.h> 
 #include <DS3232RTC.h>
 #include <TimeLib.h>
-//#include <Streaming.h>      //not sure this is needed? Dan
+#include <Streaming.h>      //not sure this is needed? Dan
 #include "pitches.h"     //if error message involving pitches.h comes up then make sure pitches.h file is in the same directory as the sketch
 #include "iTimeAfricaV2.h"
 #include <SoftwareSerial.h>
@@ -49,9 +49,7 @@ int progid = 0;      //define program ID for bluetooth programs defined in globa
 // String progid = ("BT writer/reader");       // "BT writer/reader"
 
   // variables used for converting epoch time to readable time
-unsigned long temp0=0, temp1=0, temp2=0, temp3=0, temp4=0,
-              temp5=0, temp6=0, temp7=0, temp8=0, temp9=0,
-              temp10=0, hours, mins, secs, MilliS;
+unsigned long  temp10, hours, mins, secs, MilliS;
 
 //epoch time storage variables
 unsigned long ss1Start=0, ss1Finish=0, SS1Time=0,   
@@ -70,8 +68,9 @@ void setup()
 {
     Wire.begin();                                         // Init I2C buss
  
-    // Serial.begin(57600);             // PH to use status LED serial needs to be disbaled
-    BT.begin(9600);                     // Initialize serial communications with BT (Check default Baud Rate of BT module)
+    Serial.begin(57600);             // PH to use status LED serial needs to be disbaled
+    Serial.println("OK");
+    //PH BT.begin(9600);                     // Initialize serial communications with BT (Check default Baud Rate of BT module)
     myGLCD.InitLCD();                                     // initialise LCD
     initIoPins();
     initMfrc522();
@@ -108,12 +107,8 @@ void loop()
   mfrc522.PICC_HaltA();                       // Halt PICC
   mfrc522.PCD_StopCrypto1();                  // Stop encryption on PCD     
   } 
-       
-    // when setSyncInterval(interval); runs out the status is changed to "timeNeedsSync"
-    // manual resynch is done
-    if ( timeStatus()  == timeNeedsSync ) {      
-        setSyncProvider(RTC.get);
-    }  
+
+
 }
 
 void readCardData()
@@ -297,11 +292,15 @@ block = 8;
   if (ss1Start != 0 && ss1Finish != 0)
     { 
       SS1Time = ss1Finish - ss1Start;
+      int ms = SS1Time % 1000;
+      SS1Time = SS1Time /1000;
       hours = (SS1Time/60/60);
       mins = (SS1Time-(hours*60*60))/60;
       secs = SS1Time-(hours*60*60)-(mins*60);
-    
       printTime();
+      Serial.println(String(SS1Time));
+      Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
+   
     }
   else
     {
@@ -380,10 +379,14 @@ block = 12;
   if (ss2Start != 0 && ss2Finish != 0)
     { 
       SS2Time = ss2Finish - ss2Start;
+      int ms = SS2Time % 1000;
+      SS2Time = SS2Time /1000;
       hours = (SS2Time/60/60);
       mins = (SS2Time-(hours*60*60))/60;
       secs = SS2Time-(hours*60*60)-(mins*60);
       printTime();
+       Serial.println(String(SS2Time));
+     Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
     }
   else 
     {
@@ -464,10 +467,15 @@ block = 12;
   if (ss3Start != 0 && ss3Finish != 0)
     {   
       SS3Time = ss3Finish - ss3Start;
+      int ms = SS3Time % 1000;
+      SS3Time = SS3Time /1000;
       hours = (SS3Time/60/60);
       mins = (SS3Time-(hours*60*60))/60;
       secs = SS3Time-(hours*60*60)-(mins*60);
       printTime();
+       Serial.println(String(SS3Time));
+     Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
+
     }
   else 
     {
@@ -546,10 +554,14 @@ block = 12;
   if (ss4Start != 0 && ss4Finish != 0)
     {   
       SS4Time = ss4Finish - ss4Start;
+      int ms = SS4Time % 1000;
+      SS4Time = SS4Time /1000;
       hours = (SS4Time/60/60);
       mins = (SS4Time-(hours*60*60))/60;
       secs = SS4Time-(hours*60*60)-(mins*60);
       printTime();
+      Serial.println(String(SS4Time));
+      Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
     }
   else 
     {
@@ -630,10 +642,14 @@ block = 12;
   if (ss5Start != 0 && ss5Finish != 0)
     {   
       SS5Time = ss5Finish - ss5Start;
+      int ms = SS5Time % 1000;
+      SS5Time = SS5Time /1000;
       hours = (SS5Time/60/60);
       mins = (SS5Time-(hours*60*60))/60;
       secs = SS5Time-(hours*60*60)-(mins*60);
       printTime();
+      Serial.println(String(SS5Time));
+      Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
     }
   else
     {
@@ -712,10 +728,15 @@ block = 12;
   if (ss6Start != 0 && ss6Finish != 0)
     {   
       SS6Time = ss6Finish - ss6Start;
+      int ms = SS6Time % 1000;
+      SS6Time = SS6Time /1000;
       hours = (SS6Time/60/60);
       mins = (SS6Time-(hours*60*60))/60;
       secs = SS6Time-(hours*60*60)-(mins*60);
       printTime();
+       Serial.println(String(SS6Time));
+     Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
+
     }
   else
     {
@@ -798,6 +819,8 @@ if (mins < 10) {BT.print("0");}
 BT.print(mins);BT.print(F(":"));
 if (secs < 10) {BT.print("0");}
 BT.print(secs);
+
+Serial.println("print time: " + String(hours)+ ":"+ String(mins) + ";" + String(secs));
 }
 
 
@@ -807,18 +830,19 @@ BT.print(secs);
  *  Reads each digit from the buffer to the temp placeholders
  */
 void buffer2epoch() {
-  
-      temp0 = buffer[0]-'0';          //writes 1st digit of epoch time from buffer to temp0
-      temp1 = buffer[1]-'0';          //writes 2nd digit of epoch time from buffer to temp1
-      temp2 = buffer[2]-'0';          //writes 3rd digit of epoch time from buffer to temp2
-      temp3 = buffer[3]-'0';          //writes 4th digit of epoch time from buffer to temp3
-      temp4 = buffer[4]-'0';          //writes 5th digit of epoch time from buffer to temp4
-      temp5 = buffer[5]-'0';          //writes 6th digit of epoch time from buffer to temp5
-      temp6 = buffer[6]-'0';          //writes 7th digit of epoch time from buffer to temp6
-      temp7 = buffer[7]-'0';          //writes 8th digit of epoch time from buffer to temp7
-      temp8 = buffer[8]-'0';          //writes 9th digit of epoch time from buffer to temp8
-      temp9 = buffer[9]-'0';          //writes 10th digit of epoch time from buffer to temp9
+//byte in buffer
+      unsigned long temp0 = buffer[0]-'0';          //writes 1st digit of epoch time from buffer to temp0
+      unsigned long temp1 = buffer[1]-'0';          //writes 2nd digit of epoch time from buffer to temp1
+      unsigned long temp2 = buffer[2]-'0';          //writes 3rd digit of epoch time from buffer to temp2
+      unsigned long temp3 = buffer[3]-'0';          //writes 4th digit of epoch time from buffer to temp3
+      unsigned long temp4 = buffer[4]-'0';          //writes 5th digit of epoch time from buffer to temp4
+      unsigned long temp5 = buffer[5]-'0';          //writes 6th digit of epoch time from buffer to temp5
+      unsigned long temp6 = buffer[6]-'0';          //writes 7th digit of epoch time from buffer to temp6
+      unsigned long temp7 = buffer[7]-'0';          //writes 8th digit of epoch time from buffer to temp7
+      unsigned long temp8 = buffer[8]-'0';          //writes 9th digit of epoch time from buffer to temp8
+      unsigned long temp9 = buffer[9]-'0';          //writes 10th digit of epoch time from buffer to temp9
       temp10 = ((temp0*1000000000) + (temp1*100000000) + (temp2*10000000) + (temp3*1000000) + (temp4*100000) + (temp5*10000) + (temp6*1000) + (temp7*100) + (temp8*10) + temp9);
+      Serial.println("Timestamp: " + String(temp10));
 }
 
 void writeRiderData()
@@ -896,10 +920,10 @@ beepsLights();
 
 void wipeCard()                               //Wipes data from ALL writeable blocks!
 {
-byte buffer[] = {0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30};
+byte buffer[16] = {0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30};
 MFRC522::StatusCode status;
 
-byte dataBlocks[] = {1,2,4,5,6,8,9,10,12,13,14,16,17,18,20,21,22,
+byte dataBlocks[47] = {1,2,4,5,6,8,9,10,12,13,14,16,17,18,20,21,22,
                     24,25,26,28,29,30,32,33,34,36,37,38,40,41,42,
                     44,45,46,48,49,50,52,53,54,56,57,58,60,61,62};
                           
@@ -931,10 +955,10 @@ byte dataBlocks[] = {1,2,4,5,6,8,9,10,12,13,14,16,17,18,20,21,22,
 
 void wipeTimes()                               //Wipes TIME data from  writeable blocks!
 {
-byte buffer[] = {0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30};
+byte buffer[16] = {0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30};
 MFRC522::StatusCode status;
 
-byte dataBlocks[] = {8,9,10,12,13,14,16,17,18,20,21,22,
+byte dataBlocks[42] = {8,9,10,12,13,14,16,17,18,20,21,22,
                     24,25,26,28,29,30,32,33,34,36,37,38,40,41,42,
                     44,45,46,48,49,50,52,53,54,56,57,58,60,61,62};
 
@@ -1027,8 +1051,8 @@ void updateLcdScreen()
 
 void beepsLights()                                            // Beeps and leds for succesfull scan
 {
-  int melody[] = {NOTE_A7, NOTE_C7 };        // notes in the melody:
-  int noteDurations[] = {8, 8};                        // note durations 4 = quarter note, 8 = eighth note, etc.::
+  int melody[2] = {NOTE_A7, NOTE_C7 };        // notes in the melody:
+  int noteDurations[2] = {8, 8};                        // note durations 4 = quarter note, 8 = eighth note, etc.::
     
     for (int thisNote = 0; thisNote < 2; thisNote++) {
         int noteDuration = 1000 / noteDurations[thisNote];      //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
@@ -1050,14 +1074,14 @@ void beepsLights()                                            // Beeps and leds 
 void configrePod() {
     // read last pod type index from eeprom and select that identiry as default
     typeIndex = EEPROM.read(ADDRESS_BTPROG);
-    unsigned long ConfigTimeoutMs = millis() + CONFIG_TYME_MS;
-    unsigned long msLeft = CONFIG_TYME_MS;
+    unsigned long ConfigTimeoutMs = millis() + CONFIG_TIME_MS;
+    unsigned long msLeft = CONFIG_TIME_MS;
     while ( millis() < ConfigTimeoutMs ) {
         // check for card read and incremetn typeIndex
         if ( mfrc522.PICC_IsNewCardPresent()) {    // Look for new cards
             typeIndex++;
         }
-        if (typeIndex >= LIST_SIZE1) {
+        if (typeIndex >= LIST_SIZE_BT) {
             typeIndex = 0;                          // if uninitilized set to 0
         }
         thisPod = BTProgList[typeIndex];
