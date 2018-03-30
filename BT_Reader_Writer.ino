@@ -40,32 +40,7 @@ extern unsigned char BigNumbers[];    // for 5110 LCD display
 SoftwareSerial BT(UART_RX, UART_TX); // creates a "virtual" serial port/UART 
 int progid = 0;      //define program ID for bluetooth programs defined in global definations (1,2,3,4 etc)           
 
-/*
- * BELOW IS STATION/POD IDENTIFICATION!
- * 
- * Uncomment the appropriate line to identify this station/pod (Don't use this code for finish PODS!)
- */
-// move to header file
-// String progid = ("BT writer/reader");       // "BT writer/reader"
-
-  // variables used for converting epoch time to readable time
-unsigned long  temp10, hours, mins, secs, MilliS;
-
-//epoch time storage variables
-unsigned long ss1Start=0, ss1Finish=0, SS1Time=0,   
-              ss2Start=0, ss2Finish=0, SS2Time=0,
-              ss3Start=0, ss3Finish=0, SS3Time=0,
-              ss4Start=0, ss4Finish=0, SS4Time=0,
-              ss5Start=0, ss5Finish=0, SS5Time=0,
-              ss6Start=0, ss6Finish=0, SS6Time=0,
-              SS1TimeMilliS=0, SS2TimeMilliS=0, SS3TimeMilliS=0,
-              SS4TimeMilliS=0, SS5TimeMilliS=0, SS6TimeMilliS=0,
-              totalRaceTime=0;
-              
-byte buffer[18];
-
-void setup() 
-{
+void setup() {
     Wire.begin();                                         // Init I2C buss
  
     Serial.begin(57600);             // PH to use status LED serial needs to be disbaled
@@ -77,750 +52,216 @@ void setup()
     configrePod();
 }
 
-void loop() 
-{
+void loop() {
+
     updateLcdScreen();                            // invoke LCD Screen fucntion
-
-  if ( ! mfrc522.PICC_IsNewCardPresent())     // Look for new cards
-      return;
- 
-  if ( ! mfrc522.PICC_ReadCardSerial())       // Select one of the cards
-      return;
-  else {    
-      if(BTProgList[typeIndex].progid == 1){             // Runs BT program 1
-        writeRiderData();   //If value is 1 then invoke writeriderdata function
- 
-      }
-      
-      if(BTProgList[typeIndex].progid == 2){         // Runs BT program 2
-             readCardData();     //If value is 2 then invoke readcard function
-
-      }
-      
-      if(BTProgList[typeIndex].progid == 3){         // Runs  BT program 3
-              wipeCard();    //If value is 3 then invoke wipecard function
-      }
-      if(BTProgList[typeIndex].progid == 4){         // Runs  BT program 4
-      
-              wipeTimes();    //If value is 4 then invoke wipetimes function
-      }
-  mfrc522.PICC_HaltA();                       // Halt PICC
-  mfrc522.PCD_StopCrypto1();                  // Stop encryption on PCD     
+    delay(200);
+  if ( ! mfrc522.PICC_IsNewCardPresent()) {    // Look for new cards
+    return;
+  }
+  if ( ! mfrc522.PICC_ReadCardSerial()) {      // Select one of the cards
+    return;
+  } else {    
+    if(BTProgList[typeIndex].progid == 1){             // Runs BT program 1
+      writeRiderData();   //If value is 1 then invoke writeriderdata function
+    }   
+    if(BTProgList[typeIndex].progid == 2){         // Runs BT program 2
+      readCardData();     //If value is 2 then invoke readcard function
+    }    
+    if(BTProgList[typeIndex].progid == 3){         // Runs  BT program 3
+      wipeCard();    //If value is 3 then invoke wipecard function
+    }
+    if(BTProgList[typeIndex].progid == 4){         // Runs  BT program 4
+      wipeTimes();    //If value is 4 then invoke wipetimes function
+    }
+    mfrc522.PICC_HaltA();                       // Halt PICC
+    mfrc522.PCD_StopCrypto1();                  // Stop encryption on PCD     
   } 
 
 
 }
 
-void readCardData()
-{
-
-  byte size = sizeof(buffer);
-  byte status;
-  byte block;
-
-
-/*
- * FIRST NAME
- */
- 
-  block = 1;                                                                                 // first name
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
-
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-  
-// Write buffer to console
-  
-    for (uint8_t i = 0; i < 16; i++) 
-      {
-        BT.write(buffer[i]) ;   //writes data byte by byte to console
-//        myGLCD.print(temp10), CENTER, 30);   //writes data byte by byte to console
-      }
-
-BT.print("\t") ;             //tab separator
-
-/*
- * SURNAME
- */
-/* 
-block = 2;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
-
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){ 
-
-          return;   }
-
-// Write buffer to console
-  
-    for (uint8_t i = 0; i < 16; i++) 
-      {
-        BT.write(buffer[i]) ;   //writes data byte by byte to console
-      }
-
-BT.print("\t") ;             //tab separator 
+/* reads and display name, surname and tag no 
+*  error status is returened 
 */
-/*
- * WATCH NUMBER
- */
- 
-block = 4;
+byte readTagIdentities(byte block){
+  byte buffer[TAG_RD_BUF_SIZE];
+  byte size = TAG_RD_BUF_SIZE;
+  byte status;
 
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
+  // Authentication
+  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
+  if (status != MFRC522::STATUS_OK){ 
+    //BT.print(F("PCD_Authenticate() failed: "));
+    //BT.println(mfrc522.GetStatusCodeName(status));
+    BT.println(F("Error-ReScan"));
+    BT.println(); 
+    return status;
+  }
 
-// Write buffer to console
+  // Read data from the block into buffer
+  status = mfrc522.MIFARE_Read(block, buffer, &size);
+  if (status != MFRC522::STATUS_OK){
+    BT.println(F("Error-ReScan"));
+    BT.println();  
+    return status;
+  }
   
-    for (uint8_t i = 0; i < 16; i++) 
-      {
-        BT.write(buffer[i]) ;   //writes data byte by byte to console
-      }
-
-BT.print("\t") ;             //tab separator
-
-/*
- * STAGE 1 START TIME   // reads SS1 Start Time from PICC  block 8 and stores in buffer
- */
- 
-block = 8;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-  
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-  ss1Start = temp10;
-
-/*
- * STAGE 1 FINISH TIME
- * // reads SS1 Finish Time from PICC  block 9, then subtracts ss1 finish from ss1 start and calculates SS1 Time
- * // and then downloads SS1 Time to BT serial
- */
- 
-  block = 9;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-  ss1Finish = temp10;
-  
-  if (ss1Start > ss1Finish)                                         // if ss1Start bigger than ss1Finish, then
-    {
-      BT.print("ERROR") ;                                         // write ERROR to BT
-      SS1Time = 0;                                                  // set stage time to zero for total count
-    }
-  else  
-  if (ss1Start != 0 && ss1Finish != 0)
-    { 
-      SS1Time = ss1Finish - ss1Start;
-      int ms = SS1Time % 1000;
-      SS1Time = SS1Time /1000;
-      hours = (SS1Time/60/60);
-      mins = (SS1Time-(hours*60*60))/60;
-      secs = SS1Time-(hours*60*60)-(mins*60);
-      printTime();
-      Serial.println(String(SS1Time));
-      Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
-   
-    }
-  else
-    {
-      BT.print("DNS/DNF") ;
-      SS1Time = 0;
-    }
-
-BT.print("\t") ;             //tab separator
-
-/*
- * STAGE 2 START TIME   // reads SS2 Start Time from PICC  block 8 and stores in buffer
- */
-
-block = 12;
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-         return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-  ss2Start = temp10;
-  
-/*
- * STAGE 2 FINISH TIME
- */
- 
-  block = 13;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-  
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
-
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-      
-  ss2Finish = temp10;
-
-  if (ss2Start > ss2Finish)                                         // if ss2Start bigger than ss2Finish, then
-    {
-      BT.print("ERROR") ;                                         // write ERROR to BT
-      SS2Time = 0;                                                  // set stage time to zero for total count
-    }
-  else  
-  if (ss2Start != 0 && ss2Finish != 0)
-    { 
-      SS2Time = ss2Finish - ss2Start;
-      int ms = SS2Time % 1000;
-      SS2Time = SS2Time /1000;
-      hours = (SS2Time/60/60);
-      mins = (SS2Time-(hours*60*60))/60;
-      secs = SS2Time-(hours*60*60)-(mins*60);
-      printTime();
-       Serial.println(String(SS2Time));
-     Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
-    }
-  else 
-    {
-      BT.print("DNS/DNF") ;
-      SS2Time = 0;
-    }
-
+  // Write buffer to console
+  for (uint8_t i = 0; i < TAG_WR_BUF_SIZE; i++) {
+    BT.write(buffer[i]) ;   //writes data byte by byte to console
+    //myGLCD.print(temp10), CENTER, 30);   //writes data byte by byte to console
+  }
   BT.print("\t") ;             //tab separator
+  return STATUS_OK;
+}
 
-/*
- * STAGE 3 START TIME   // reads SS3 Start Time from PICC  block 8 and stores in buffer
- */
- 
-  block = 16;                                                                                    // Stage 3 Start time
 
-// Authentication
- 
+/* reads timestamp from tag and converts to ms
+*  timestamo is passes as unsugned ging mstimestamp
+*  error status is returened 
+*/
+void readStageTime(byte block, unsigned long *msTimesTamp){
+  byte buffer[TAG_RD_BUF_SIZE];
+  byte size = TAG_RD_BUF_SIZE;
+  byte status;
+  
+  // Authentication
   status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
+  if (status != MFRC522::STATUS_OK){ 
+    //       BT.print(F("PCD_Authenticate() failed: "));
+    //       BT.println(mfrc522.GetStatusCodeName(status));
+    BT.println(F("Error-ReScan"));
+    BT.println(); 
+    return status;
+  }
  
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
+  // Read data from the block into buffer
+  status = mfrc522.MIFARE_Read(block, buffer, &size);
+  if (status != MFRC522::STATUS_OK){
+    BT.println(F("Error-ReScan"));
+    BT.println();  
+    return status;   
+  }
 
-// Convert buffer type byte to unsigned long int and store
+  // Write buffer to console
+  for (int i =0; i < 18; i++){
+    Serial.print(readBuffer[i], HEX);
+  }
+  Serial.println();  
 
-  buffer2epoch();
-  ss3Start = temp10;
-  
-/*
- * STAGE 3 FINISH TIME
- */
- 
-  block = 17;                                                                                    // Stage 3 Finish time
+  // Convert buffer type byte to unsigned long and store
+  int msSize = 4;
+  unsigned long ms;
+  for (int i=0; i < msSize ; i++ ){
+   ms = ms + ((unsigned long)readBuffer[i]  << (i*8));// & 0xFF
+  }
+  //Serial.println(ms, HEX);
+  *msTimesTamp = ms;
+  return STATUS_OK  ;
 
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-  
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
+}
 
-// Convert buffer type byte to unsigned long int and store
+unsigned long getStageResutls(int stageNo){
+  unsigned long startMs = 0;
+  unsigned long endMs   = 0;
+  unsigned long stageMs = 0;
 
-  buffer2epoch();
-      
-  ss3Finish = temp10;
+  byte startListIndex  = stageNo*2 - 2;
+  byte finisListhIndex = stageNo*2 - 1;
+  serial.println(stageNo);
+  serial.println(podTypeList[startListIndex].podID);
+  serial.println(podTypeList[finisListhIndex].podID);
 
-  if (ss3Start > ss3Finish)                                         // if ss3Start bigger than ss3Finish, then
-    {
-      BT.print("ERROR") ;                                         // write ERROR to BT
-      SS3Time = 0;                                                  // set stage time to zero for total count
-    }
-  else  
-  
-  if (ss3Start != 0 && ss3Finish != 0)
-    {   
-      SS3Time = ss3Finish - ss3Start;
-      int ms = SS3Time % 1000;
-      SS3Time = SS3Time /1000;
-      hours = (SS3Time/60/60);
-      mins = (SS3Time-(hours*60*60))/60;
-      secs = SS3Time-(hours*60*60)-(mins*60);
-      printTime();
-       Serial.println(String(SS3Time));
-     Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
+  readStageTime(podTypeList[startListIndex].block,  &startMs);
+  readStageTime(podTypeList[finisListhIndex].block, &endMs);
 
-    }
-  else 
-    {
-      BT.print("DNS/DNF") ;
-      SS3Time = 0;
-    }
-
+  if (startMs > endMs) {                                    // if ss1Start bigger than ss1Finish, then
+    BT.print("ERROR") ;                                         // write ERROR to BT
+    stageMs = 0;                                                  // set stage time to zero for total count
+  } else if (startMs != 0 && endMs != 0)  { 
+    stageMs = endMs - startMs;
+    printTimeFromMs(stageMs);
+    //TODO log start end and stage time to excel
+  } else {
+    BT.print("DNS/DNF") ;
+    stageMs = 0;
+  }
   BT.print("\t") ;             //tab separator
+  return stageMs;
+}
 
-/*
- * STAGE 4 START TIME   // reads SS4 Start Time from PICC  block 8 and stores in buffer
- */
- 
-  block = 20;
+void readCardData() {
+  int StageCount = 0
+  unsigned long totalRaceTimeMS = 0;
 
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-  
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
+  // read name, surname and tag number
+  for (int i = 0; i < LIST_SIZE_ID; i++){
+    readTagIdentities(tagIdList[i].block);
+  }
 
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-  ss4Start = temp10;
-  
-/*
- * STAGE 4 FINISH TIME
- */
- 
-  block = 21;                                                                                    // Stage 4 Finish time
-
-/// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-      
-  ss4Finish = temp10;
-
-    if (ss4Start > ss4Finish)                                         // if ss4Start bigger than ss4Finish, then
-    {
-      BT.print("ERROR") ;                                         // write ERROR to BT
-      SS4Time = 0;                                                  // set stage time to zero for total count
+  int noStages = 6;
+  for ( int i = 1; i = noStages; i++ ){
+    unsigned long stageMs = getStageResutls(i);
+    totalRaceTimeMS = totalRaceTimeMS + stageMs;
+    if (stageMs != 0) {
+      StageCount++;
     }
-  else  
-  if (ss4Start != 0 && ss4Finish != 0)
-    {   
-      SS4Time = ss4Finish - ss4Start;
-      int ms = SS4Time % 1000;
-      SS4Time = SS4Time /1000;
-      hours = (SS4Time/60/60);
-      mins = (SS4Time-(hours*60*60))/60;
-      secs = SS4Time-(hours*60*60)-(mins*60);
-      printTime();
-      Serial.println(String(SS4Time));
-      Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
-    }
-  else 
-    {
-      BT.print("DNS/DNF") ;
-      SS4Time = 0;
-    }
+  }
 
-  
-  BT.print("\t") ;             //tab separator
 
-/*
- * STAGE 5 START TIME   // reads SS5 Start Time from PICC  block 8 and stores in buffer
- */
- 
-  block = 24;                                                                                    // Stage 5 Start time
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-  
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-  ss5Start = temp10;
-  
-/*
- * STAGE 5 FINISH TIME
- */
- 
-  block = 25;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-   
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-      
-  ss5Finish = temp10;
-
-    if (ss5Start > ss5Finish)                                         // if ss5Start bigger than ss5Finish, then
-    {
-      BT.print("ERROR") ;                                         // write ERROR to BT
-      SS5Time = 0;                                                  // set stage time to zero for total count
-    }
-  else  
-  if (ss5Start != 0 && ss5Finish != 0)
-    {   
-      SS5Time = ss5Finish - ss5Start;
-      int ms = SS5Time % 1000;
-      SS5Time = SS5Time /1000;
-      hours = (SS5Time/60/60);
-      mins = (SS5Time-(hours*60*60))/60;
-      secs = SS5Time-(hours*60*60)-(mins*60);
-      printTime();
-      Serial.println(String(SS5Time));
-      Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
-    }
-  else
-    {
-      BT.print("DNS/DNF") ;
-      SS5Time = 0;
-    }
-
-  BT.print("\t") ;             //tab separator
-
-/*
- * STAGE 6 START TIME   // reads SS6 Start Time from PICC  block 8 and stores in buffer
- */
- 
-  block = 28;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
-  
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-        return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-  ss6Start = temp10;
-  
-/*
- * STAGE 6 FINISH TIME
- */
- 
-  block = 29;
-
-// Authentication
- 
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A,block, &key, &(mfrc522.uid));
- 
-    if (status != MFRC522::STATUS_OK){ 
-//       BT.print(F("PCD_Authenticate() failed: "));
-//       BT.println(mfrc522.GetStatusCodeName(status));
-         BT.println(F("Error-ReScan"));
-         BT.println(); 
-         return;  }
- 
-// Read data from the block into buffer
-    
-    status = mfrc522.MIFARE_Read(block, buffer, &size);
-    if (status != MFRC522::STATUS_OK){
-         BT.println(F("Error-ReScan"));
-         BT.println();  
-    return;   }
-          
-// Convert buffer type byte to unsigned long int and store
-
-  buffer2epoch();
-      
-  ss6Finish = temp10;
-  
-  if (ss6Start > ss6Finish)                                         // if ss6Start bigger than ss6Finish, then
-    {
-      BT.print("ERROR") ;                                         // write ERROR to BT
-      SS6Time = 0;                                                  // set stage time to zero for total count
-    }
-  else    
-  if (ss6Start != 0 && ss6Finish != 0)
-    {   
-      SS6Time = ss6Finish - ss6Start;
-      int ms = SS6Time % 1000;
-      SS6Time = SS6Time /1000;
-      hours = (SS6Time/60/60);
-      mins = (SS6Time-(hours*60*60))/60;
-      secs = SS6Time-(hours*60*60)-(mins*60);
-      printTime();
-       Serial.println(String(SS6Time));
-     Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
-
-    }
-  else
-    {
-      BT.print("DNS/DNF") ;
-      SS6Time = 0;
-    }
-
-  BT.print("\t") ;             //tab separator
-
-  
-/*
- * TOTAL TIME
- * Add all stage times and print the total to bt SERIAL
- */
- 
-totalRaceTime = SS1Time + SS2Time + SS3Time + SS4Time + SS5Time + SS6Time;
-hours = (totalRaceTime/60/60);
-mins = (totalRaceTime-(hours*60*60))/60;
-secs = totalRaceTime-(hours*60*60)-(mins*60);
-
-printTime();
-BT.print("\t") ;    //tab separator
- 
-/*
- * NUMBER OF STAGES
- * Count number of succesful stages and add up
- */
- int StageCount = 0;
- 
-if (SS1Time != 0){                                        // if ss1Time is not equal to zero
-    StageCount = StageCount + 1;                                                  // set stage time to zero for total count
-    }
-    else {
-        StageCount = StageCount +0;                                                  // set stage time to zero for total count
-    }     
-if (SS2Time != 0){                                        // if ss1Time is not equal to zero
-    StageCount = StageCount + 1;                                                  // set stage time to zero for total count
-    }
-    else {
-        StageCount = StageCount +0;                                                  // set stage time to zero for total count
-    }
-if (SS3Time != 0){                                        // if ss1Time is not equal to zero
-    StageCount = StageCount + 1;                                                  // set stage time to zero for total count
-    }
-    else {
-        StageCount = StageCount +0;                                                  // set stage time to zero for total count
-    }
-if (SS4Time != 0){                                        // if ss1Time is not equal to zero
-    StageCount = StageCount + 1;                                                  // set stage time to zero for total count
-    }
-    else {
-        StageCount = StageCount +0;                                                  // set stage time to zero for total count
-    }
-if (SS5Time != 0){                                        // if ss1Time is not equal to zero
-    StageCount = StageCount + 1;                                                  // set stage time to zero for total count
-    }
-    else {
-        StageCount = StageCount +0;                                                  // set stage time to zero for total count
-    }
-if (SS6Time != 0){                                        // if ss1Time is not equal to zero
-    StageCount = StageCount + 1;                                                  // set stage time to zero for total count
-    }
-    else {
-        StageCount = StageCount +0;                                                  // set stage time to zero for total count
-    }
-    
-BT.print(StageCount);
+  printTimeFromMs(totalRaceTimeMS);
+  // printTimeFromS(totalRaceTime);
+  BT.print("\t") ;             //tab separator  
+     
+  BT.print(StageCount);
   BT.print("\t") ;             //tab separator
   BT.println();
   beepsLights();  
 }
 
+
 /*
  * Inserts leading zero if required and prints HH:MM:SS.000 format
  */
-void printTime() {
-  if (hours < 10) {BT.print("0");}       
-BT.print(hours);BT.print(F(":"));
-if (mins < 10) {BT.print("0");}
-BT.print(mins);BT.print(F(":"));
-if (secs < 10) {BT.print("0");}
-BT.print(secs);
+void printTimeFromMs(unsigned long timeMs) {
 
-Serial.println("print time: " + String(hours)+ ":"+ String(mins) + ";" + String(secs));
+  int ms = timeMs % 1000;
+  unsigned long timeS = timeMs /1000;
+  hours = (timeS/60/60);
+  mins = (timeS-(hours*60*60))/60;
+  secs = timeS-(hours*60*60)-(mins*60);
+
+  Serial.println(String(timeMs));
+  Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
+
+  if (hours < 10) {BT.print("0");}       
+  BT.print(hours);BT.print(F(":"));
+  if (mins < 10) {BT.print("0");}
+  BT.print(mins);BT.print(F(":"));
+  if (secs < 10) {BT.print("0");}
+  BT.print(secs);BT.print(F("."));
+  BT.print(ms);
+}
+
+
+
+/*
+ * Inserts leading zero if required and prints HH:MM:SS.000 format
+ */
+void printTimeFromS(unsigned long sec) {
+  unsigned long hours = (sec/60/60);
+  unsigned long mins = (sec-(hours*60*60))/60;
+  unsigned long secs = sec-(hours*60*60)-(mins*60);
+
+  if (hours < 10) {BT.print("0");}       
+  BT.print(hours);BT.print(F(":"));
+  if (mins < 10) {BT.print("0");}
+  BT.print(mins);BT.print(F(":"));
+  if (secs < 10) {BT.print("0");}
+  BT.print(secs);
+
+  Serial.println("print time: " + String(hours)+ ":"+ String(mins) + ";" + String(secs));
 }
 
 
@@ -845,149 +286,6 @@ void buffer2epoch() {
       Serial.println("Timestamp: " + String(temp10));
 }
 
-void writeRiderData()
-{
-
-  byte buffer[16] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  byte block;
-  MFRC522::StatusCode status;
-  byte len;
-
-  BT.setTimeout(20000) ;     // 20 second time limit for input from serial
-//Need to add in else statement so it loops around when that settimeout time is up
-
-  BT.println(F("*** CARD PRESENTED TO READER ***"));    //shows in serial that it is ready to read
-  BT.println(F("Type First Name, ending with #"));
-  len = BT.readBytesUntil('#', (char *) buffer, 16) ; // read first name from serial
-//for (byte i = len; i < 16; i++) buffer[i] = ' ';        // pad with spaces
-
-///////////////////////////////////
-// Ask personal data: First Name
-///////////////////////////////////   
-
-  block = 1;
-//  Serial.println(F("Authenticating using key A..."));
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
-  if (status != MFRC522::STATUS_OK) {
-    BT.println(F("PCD_Authenticate() failed: "));
-    return;
-  }
-
-  // Write block
-  status = mfrc522.MIFARE_Write(block, buffer, 16);
-  if (status != MFRC522::STATUS_OK) {
-    BT.println(F("MIFARE_Write() failed: "));
-//    Serial.println(mfrc522.GetStatusCodeName(status));
-    return;
-  }
-//    BT.println(F("MIFARE_Write(status) success: "));
-    BT.println(F("Name written succesfully"));
- 
-//////////////////////////////////
-// Ask personal data: Watch Number
-//////////////////////////////////
-
- for (int i = 0; i < 16; i++) buffer[i] = 0;     // clears the buffer
-
-  BT.println(F("Type Watch Number, ending with #"));
-  len = BT.readBytesUntil('#', (char *) buffer, 16) ;          // read race number from serial into buffer
-
-  block = 4;
-
-  status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, block, &key, &(mfrc522.uid));
-  if (status != MFRC522::STATUS_OK) {
-    BT.println(F("PCD_Authenticate() failed: "));
-    return;
-  }
-
-  // Write block
-  status = mfrc522.MIFARE_Write(block, buffer, 16);
-  if (status != MFRC522::STATUS_OK) {
-    BT.println(F("MIFARE_Write() failed: "));
-    return;
-  }
-  else {
-//BT.println(F("MIFARE_Write(status) success: "));
-  BT.println(F("Watch Number written succesfully "));
-  }
-  
-BT.println(F("\n*** WRITE COMPLETE ***"));
-BT.println(F("\n*** PRESENT NEXT CARD ***"));
-BT.println();
-beepsLights();
-
-}
-
-void wipeCard()                               //Wipes data from ALL writeable blocks!
-{
-byte buffer[16] = {0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30};
-MFRC522::StatusCode status;
-
-byte dataBlocks[47] = {1,2,4,5,6,8,9,10,12,13,14,16,17,18,20,21,22,
-                    24,25,26,28,29,30,32,33,34,36,37,38,40,41,42,
-                    44,45,46,48,49,50,52,53,54,56,57,58,60,61,62};
-                          
-    BT.println(F("*** DELETING ALL DATA... ***"));    //shows in serial that it is ready to read
-    BT.println();
-
-    
-    for(int i = 0; i < sizeof(dataBlocks); i++) {
-    status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, (dataBlocks[i]), &key, &(mfrc522.uid));
-     if (status != MFRC522::STATUS_OK) {
-         BT.println(F("PCD_Authenticate() failed: "));
-         return;
-     }
-      
-    status = mfrc522.MIFARE_Write((dataBlocks[i]), buffer, 16);
-      if (status != MFRC522::STATUS_OK) {
-          BT.println(F("MIFARE_Write() failed: "));
-        return;
-      }
-      else {
-      BT.print(F("All blocks deleted"));BT.println(dataBlocks[i]);
-      }
-    }
-      BT.println(F("WATCH DATA DELETED"));
-      BT.println(F("PRESENT NEXT CARD FOR DATA WIPE"));
-      BT.println();
-      beepsLights(); 
-}
-
-void wipeTimes()                               //Wipes TIME data from  writeable blocks!
-{
-byte buffer[16] = {0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30,0x30};
-MFRC522::StatusCode status;
-
-byte dataBlocks[42] = {8,9,10,12,13,14,16,17,18,20,21,22,
-                    24,25,26,28,29,30,32,33,34,36,37,38,40,41,42,
-                    44,45,46,48,49,50,52,53,54,56,57,58,60,61,62};
-
-                          
-    BT.println(F("*** DELETING TIME DATA... ***"));    //shows in serial that it is ready to read
-    BT.println();
-
-    
-    for(int i = 0; i < sizeof(dataBlocks); i++) {
-    status = mfrc522.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, (dataBlocks[i]), &key, &(mfrc522.uid));
-     if (status != MFRC522::STATUS_OK) {
-         BT.println(F("PCD_Authenticate() failed: "));
-         return;
-     }
-      
-    status = mfrc522.MIFARE_Write((dataBlocks[i]), buffer, 16);
-      if (status != MFRC522::STATUS_OK) {
-          BT.println(F("MIFARE_Write() failed: "));
-        return;
-      }
-      else {
-      BT.print(F("All time blocks deleted"));BT.println(dataBlocks[i]);
-      }
-    }
-      BT.println(F("TIME DATA DELETED"));
-      BT.println(F("PRESENT NEXT CARD FOR DATA WIPE"));
-      BT.println();
-      beepsLights();
-}
 
 String getBatteryVoltage() {
     int sensorValue = analogRead(V_MEAS);          // read the input on analog pin A2 for battery voltage reading:
@@ -1099,21 +397,20 @@ void configrePod() {
     EEPROM.write(ADDRESS_BTPROG, typeIndex);
 
   if(BTProgList[typeIndex].progid == 2){         // Runs BT program 2
-
-  // Display Column headings (only if bluetooth connected before configure() completes)
-  BT.print("FIRST NAME "); BT.print("\t");
-  BT.print("SURNAME "); BT.print("\t");
-  BT.print("WATCH NUMBER "); BT.print("\t");
-  BT.print("SS 1 "); BT.print("\t");
-  BT.print("SS 2 "); BT.print("\t");
-  BT.print("SS 3 "); BT.print("\t");
-  BT.print("SS 4 "); BT.print("\t");
-  BT.print("SS 5 "); BT.print("\t");
-  BT.print("SS 6 "); BT.print("\t");
-  BT.print("TOTAL"); BT.print("\t");
-  BT.print("Stages Done"); BT.print("\t");
-  BT.println();
-    }
+    // Display Column headings (only if bluetooth connected before configure() completes)
+    BT.print("FIRST NAME "); BT.print("\t");
+    BT.print("SURNAME "); BT.print("\t");
+    BT.print("WATCH NUMBER "); BT.print("\t");
+    BT.print("SS 1 "); BT.print("\t");
+    BT.print("SS 2 "); BT.print("\t");
+    BT.print("SS 3 "); BT.print("\t");
+    BT.print("SS 4 "); BT.print("\t");
+    BT.print("SS 5 "); BT.print("\t");
+    BT.print("SS 6 "); BT.print("\t");
+    BT.print("TOTAL"); BT.print("\t");
+    BT.print("Stages Done"); BT.print("\t");
+    BT.println();
+  }
 }
 
 

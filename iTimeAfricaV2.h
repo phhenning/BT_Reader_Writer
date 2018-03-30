@@ -2,7 +2,7 @@
 *header file for ITA v2 PCB
 */
 
-#define VERSION "V2.2"
+#define VERSION "V3.1"
 //GLOBAL DEFINITIONS         
 
 #define DS3231_I2C_ADDRESS 	0x68
@@ -61,13 +61,13 @@ struct BTProg BTProgList [LIST_SIZE_BT] = {
     };
 
 // BELOW IS STATION/POD IDENTIFICATION!
-#define LIST_SIZE_PODS 16
+
 struct podType {
   int block;
   char podID[16]; 
 } ;
 
-
+#define LIST_SIZE_PODS 16
 struct podType podTypeList [LIST_SIZE_PODS] = {
   { 8 , "Stage 1 Start"},
   { 9 , "Stage 1 Finish"}, 
@@ -89,13 +89,31 @@ struct podType podTypeList [LIST_SIZE_PODS] = {
        
 // variouse values
 #define CONFIG_TIME_MS 10000  
-// int main()
-// {
-//     printf("Hello World\n");
-//     printf( "%i\n",STRUCTSIZE);
-//     for ( int i = 0 ; i < STRUCTSIZE ; i++ ) {
-//          printf("%s\n", podTypeList[i].podID);
-//     }
 
-//     return 0;
-// }
+
+
+struct tagId {
+  int block;
+  char description[16];
+
+}
+#define LIST_SIZE_ID 3
+struct tagId tagIdList [LIST_SIZE_ID] = {
+  { 1, "First Name"},
+  { 2, "Surname"   },
+  { 4, "Tag Number"}
+}
+
+// read buffer has 2 crc bytes
+#define TAG_RD_BUF_SIZE 18
+#define TAG_WR_BUF_SIZE 16
+
+#define STATUS_OK             0
+#define STATUS_ERROR          1
+#define STATUS_COLLISION      2
+#define STATUS_TIMEOUT        3
+#define STATUS_NO_ROOM        4
+#define STATUS_INTERNAL_ERROR 5
+#define STATUS_INVALID        6
+#define STATUS_CRC_WRONG      7
+#define STATUS_MIFARE_NACK    8
