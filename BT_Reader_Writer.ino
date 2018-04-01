@@ -8,15 +8,14 @@
 #include <LCD5110_Graph.h> 
 #include <DS3232RTC.h>
 #include <TimeLib.h>
-#include <Streaming.h>      //not sure this is needed? Dan
+//#include <Streaming.h>      //not sure this is needed? Dan
 #include "pitches.h"     //if error message involving pitches.h comes up then make sure pitches.h file is in the same directory as the sketch
 #include "iTimeAfricaV2.h"
 #include <SoftwareSerial.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <EEPROM.h>
 
 //GLOBAL DEFINITIONS
-String messageDebug;
 String messageBattery;
 int tagCount = 0;
 int flashLed = LOW;                                           //PH PWR good , led on, power low, led flashes
@@ -27,18 +26,11 @@ BTProg thisPod ;
 MFRC522 mfrc522(RFID_CS, LCD_RST);                            // PH get pins from PCB header file 
 MFRC522::MIFARE_Key key;
 
-// LCD COMPONENT
-// LCD5110 myGLCD(4,5,6,A1,7); V2.0 green pcb
-// LCD5110 myGLCD(4,5,6,7,8); (v1.0 blue PCB)
 LCD5110 myGLCD(LCD_CLK, LCD_DIN , LCD_COM , LCD_RST, LCD_CE);   // PH get pins from PCB header file
-extern unsigned char TinyFont[];      // for 5110 LCD display
-extern unsigned char SmallFont[];     // for 5110 LCD display
-extern unsigned char MediumNumbers[]; // for 5110 LCD display
-extern unsigned char BigNumbers[];    // for 5110 LCD display
 
 // BLUETOOTH COMPONENT
 SoftwareSerial BT(UART_RX, UART_TX); // creates a "virtual" serial port/UART 
-int progid = 0;      //define program ID for bluetooth programs defined in global definations (1,2,3,4 etc)           
+           
 
 void setup() {
     Wire.begin();                                         // Init I2C buss
@@ -63,16 +55,17 @@ void loop() {
     return;
   } else {    
     if(BTProgList[typeIndex].progid == 1){             // Runs BT program 1
-      writeRiderData();   //If value is 1 then invoke writeriderdata function
+ //     writeRiderData();   //If value is 1 then invoke writeriderdata function
     }   
     if(BTProgList[typeIndex].progid == 2){         // Runs BT program 2
+      Serial.println("read now");
       readCardData();     //If value is 2 then invoke readcard function
     }    
     if(BTProgList[typeIndex].progid == 3){         // Runs  BT program 3
-      wipeCard();    //If value is 3 then invoke wipecard function
+ //     wipeCard();    //If value is 3 then invoke wipecard function
     }
     if(BTProgList[typeIndex].progid == 4){         // Runs  BT program 4
-      wipeTimes();    //If value is 4 then invoke wipetimes function
+ //     wipeTimes();    //If value is 4 then invoke wipetimes function
     }
     mfrc522.PICC_HaltA();                       // Halt PICC
     mfrc522.PCD_StopCrypto1();                  // Stop encryption on PCD     
@@ -113,7 +106,13 @@ byte readTagIdentities(byte block){
     //myGLCD.print(temp10), CENTER, 30);   //writes data byte by byte to console
   }
   BT.print("\t") ;             //tab separator
-  return STATUS_OK;
+
+//  // Write buffer to console
+//  for (int i =0; i < 16; i++){
+//    Serial.print(buffer[i]);
+//  }
+//  Serial.println();  
+  return OK;
 }
 
 
@@ -122,7 +121,7 @@ byte readTagIdentities(byte block){
 *  error status is returened 
 */
 void readStageTime(byte block, unsigned long *msTimesTamp){
-  byte buffer[TAG_RD_BUF_SIZE];
+  byte readBuffer[TAG_RD_BUF_SIZE];
   byte size = TAG_RD_BUF_SIZE;
   byte status;
   
@@ -137,28 +136,23 @@ void readStageTime(byte block, unsigned long *msTimesTamp){
   }
  
   // Read data from the block into buffer
-  status = mfrc522.MIFARE_Read(block, buffer, &size);
+  status = mfrc522.MIFARE_Read(block, readBuffer, &size);
   if (status != MFRC522::STATUS_OK){
     BT.println(F("Error-ReScan"));
     BT.println();  
     return status;   
   }
 
-  // Write buffer to console
-  for (int i =0; i < 18; i++){
-    Serial.print(readBuffer[i], HEX);
-  }
-  Serial.println();  
-
   // Convert buffer type byte to unsigned long and store
   int msSize = 4;
   unsigned long ms;
   for (int i=0; i < msSize ; i++ ){
-   ms = ms + ((unsigned long)readBuffer[i]  << (i*8));// & 0xFF
+    ms = ms + ((unsigned long)readBuffer[i]  << (i*8));// & 0xFF
   }
-  //Serial.println(ms, HEX);
+  
+  //Serial.println(ms);
   *msTimesTamp = ms;
-  return STATUS_OK  ;
+  return OK  ;
 
 }
 
@@ -169,30 +163,34 @@ unsigned long getStageResutls(int stageNo){
 
   byte startListIndex  = stageNo*2 - 2;
   byte finisListhIndex = stageNo*2 - 1;
-  serial.println(stageNo);
-  serial.println(podTypeList[startListIndex].podID);
-  serial.println(podTypeList[finisListhIndex].podID);
 
   readStageTime(podTypeList[startListIndex].block,  &startMs);
   readStageTime(podTypeList[finisListhIndex].block, &endMs);
+  Serial.println(podTypeList[startListIndex].podID  + String(startMs));
+  Serial.println(podTypeList[finisListhIndex].podID + String(endMs));
+
+  
 
   if (startMs > endMs) {                                    // if ss1Start bigger than ss1Finish, then
-    BT.print("ERROR") ;                                         // write ERROR to BT
+    BT.print(F("ERROR")) ;                                         // write ERROR to BT
     stageMs = 0;                                                  // set stage time to zero for total count
   } else if (startMs != 0 && endMs != 0)  { 
     stageMs = endMs - startMs;
+//    Serial.print(F("ok "));
+//    Serial.println(String(stageMs));
     printTimeFromMs(stageMs);
     //TODO log start end and stage time to excel
   } else {
-    BT.print("DNS/DNF") ;
+    Serial.println(F("missing"));
+    BT.print(F("DNS/DNF")) ;
     stageMs = 0;
   }
-  BT.print("\t") ;             //tab separator
+  BT.print(F("\t")) ;             //tab separator
   return stageMs;
 }
 
 void readCardData() {
-  int StageCount = 0
+  int StageCount = 0;
   unsigned long totalRaceTimeMS = 0;
 
   // read name, surname and tag number
@@ -201,21 +199,21 @@ void readCardData() {
   }
 
   int noStages = 6;
-  for ( int i = 1; i = noStages; i++ ){
-    unsigned long stageMs = getStageResutls(i);
-    totalRaceTimeMS = totalRaceTimeMS + stageMs;
-    if (stageMs != 0) {
-      StageCount++;
-    }
+  for ( int i = 1; i <= noStages; i++ ){
+      unsigned long stageMs = getStageResutls(i);
+      totalRaceTimeMS = totalRaceTimeMS + stageMs;
+      if (stageMs != 0) {
+        StageCount++;
+      }
   }
 
-
+  Serial.println(F("Total "));
   printTimeFromMs(totalRaceTimeMS);
   // printTimeFromS(totalRaceTime);
-  BT.print("\t") ;             //tab separator  
+  BT.print(F("\t")) ;             //tab separator  
      
   BT.print(StageCount);
-  BT.print("\t") ;             //tab separator
+  BT.print(F("\t")) ;             //tab separator  
   BT.println();
   beepsLights();  
 }
@@ -225,15 +223,12 @@ void readCardData() {
  * Inserts leading zero if required and prints HH:MM:SS.000 format
  */
 void printTimeFromMs(unsigned long timeMs) {
-
   int ms = timeMs % 1000;
   unsigned long timeS = timeMs /1000;
-  hours = (timeS/60/60);
-  mins = (timeS-(hours*60*60))/60;
-  secs = timeS-(hours*60*60)-(mins*60);
-
-  Serial.println(String(timeMs));
-  Serial.println(String(hours)+ ":"+ String(mins) + ":" + String(secs) + "." + String(ms));
+  unsigned int hours = (timeS/60/60);
+  unsigned int mins = (timeS-(hours*60*60))/60;
+  unsigned int secs = timeS-(hours*60*60)-(mins*60);
+  Serial.println(String(hours)+ (F(":")) + String(mins) + (F(":")) + String(secs) + (F(".")) + String(ms));
 
   if (hours < 10) {BT.print("0");}       
   BT.print(hours);BT.print(F(":"));
@@ -242,48 +237,6 @@ void printTimeFromMs(unsigned long timeMs) {
   if (secs < 10) {BT.print("0");}
   BT.print(secs);BT.print(F("."));
   BT.print(ms);
-}
-
-
-
-/*
- * Inserts leading zero if required and prints HH:MM:SS.000 format
- */
-void printTimeFromS(unsigned long sec) {
-  unsigned long hours = (sec/60/60);
-  unsigned long mins = (sec-(hours*60*60))/60;
-  unsigned long secs = sec-(hours*60*60)-(mins*60);
-
-  if (hours < 10) {BT.print("0");}       
-  BT.print(hours);BT.print(F(":"));
-  if (mins < 10) {BT.print("0");}
-  BT.print(mins);BT.print(F(":"));
-  if (secs < 10) {BT.print("0");}
-  BT.print(secs);
-
-  Serial.println("print time: " + String(hours)+ ":"+ String(mins) + ";" + String(secs));
-}
-
-
-  
-/* 
- *  Converts type byte to unsigned long int.
- *  Reads each digit from the buffer to the temp placeholders
- */
-void buffer2epoch() {
-//byte in buffer
-      unsigned long temp0 = buffer[0]-'0';          //writes 1st digit of epoch time from buffer to temp0
-      unsigned long temp1 = buffer[1]-'0';          //writes 2nd digit of epoch time from buffer to temp1
-      unsigned long temp2 = buffer[2]-'0';          //writes 3rd digit of epoch time from buffer to temp2
-      unsigned long temp3 = buffer[3]-'0';          //writes 4th digit of epoch time from buffer to temp3
-      unsigned long temp4 = buffer[4]-'0';          //writes 5th digit of epoch time from buffer to temp4
-      unsigned long temp5 = buffer[5]-'0';          //writes 6th digit of epoch time from buffer to temp5
-      unsigned long temp6 = buffer[6]-'0';          //writes 7th digit of epoch time from buffer to temp6
-      unsigned long temp7 = buffer[7]-'0';          //writes 8th digit of epoch time from buffer to temp7
-      unsigned long temp8 = buffer[8]-'0';          //writes 9th digit of epoch time from buffer to temp8
-      unsigned long temp9 = buffer[9]-'0';          //writes 10th digit of epoch time from buffer to temp9
-      temp10 = ((temp0*1000000000) + (temp1*100000000) + (temp2*10000000) + (temp3*1000000) + (temp4*100000) + (temp5*10000) + (temp6*1000) + (temp7*100) + (temp8*10) + temp9);
-      Serial.println("Timestamp: " + String(temp10));
 }
 
 
@@ -313,8 +266,13 @@ String getBatteryVoltage() {
 }
 
 // Displays main Screen Time & Pod station ID
-void updateLcdScreen()    
-{
+void updateLcdScreen()  {  
+    String msg;
+    extern unsigned char TinyFont[];      // for 5110 LCD display
+    extern unsigned char SmallFont[];     // for 5110 LCD display
+    extern unsigned char MediumNumbers[]; // for 5110 LCD display
+    extern unsigned char BigNumbers[];    // for 5110 LCD display
+
     // 1st line of display
     myGLCD.invert (false); //turn oFF inverted screen
     myGLCD.setFont(SmallFont);
@@ -323,24 +281,26 @@ void updateLcdScreen()
     myGLCD.invertText (false); //turn off inverted text
 
     //2nd line  Display
-
-    myGLCD.print("Hold Watch",CENTER,10);          //Instruction
+    msg = "Hold Watch";
+    myGLCD.print(msg,CENTER,10);          //Instruction
 
     // 3rd Line
-    myGLCD.print("and don't move",CENTER,20);          //Instruction
+    msg = "and don't move";
+    myGLCD.print(msg,CENTER,20);          //Instruction
 
     // 4th Line
     int temp    = RTC.temperature();
     int mC      = ((temp*100) % 400 ) /100;
-    String msg  = String(temp/4);
+    msg         = String(temp/4);
     msg         = msg + "." + mC + "C";
-    myGLCD.print(msg,LEFT,30);     
-    myGLCD.print("Tags: ",RIGHT,30);    
+    myGLCD.print(msg,LEFT,30);    
+    msg = "Tags: ";
+    myGLCD.print(msg,RIGHT,30);    
     myGLCD.print( String(tagCount),RIGHT,30);
 
     // 5th Line
-    String messageBattery = getBatteryVoltage();  
-    myGLCD.print(messageBattery,LEFT,40);
+    msg = getBatteryVoltage();  
+    myGLCD.print(msg,LEFT,40);
 
     myGLCD.update();
     myGLCD.clrScr();     
@@ -372,6 +332,9 @@ void beepsLights()                                            // Beeps and leds 
 void configrePod() {
     // read last pod type index from eeprom and select that identiry as default
     typeIndex = EEPROM.read(ADDRESS_BTPROG);
+    if ( typeIndex >= LIST_SIZE_BT) {
+      typeIndex = 0; // reset indix if its biger than list size
+    }
     unsigned long ConfigTimeoutMs = millis() + CONFIG_TIME_MS;
     unsigned long msLeft = CONFIG_TIME_MS;
     while ( millis() < ConfigTimeoutMs ) {
@@ -398,25 +361,20 @@ void configrePod() {
 
   if(BTProgList[typeIndex].progid == 2){         // Runs BT program 2
     // Display Column headings (only if bluetooth connected before configure() completes)
-    BT.print("FIRST NAME "); BT.print("\t");
-    BT.print("SURNAME "); BT.print("\t");
-    BT.print("WATCH NUMBER "); BT.print("\t");
-    BT.print("SS 1 "); BT.print("\t");
-    BT.print("SS 2 "); BT.print("\t");
-    BT.print("SS 3 "); BT.print("\t");
-    BT.print("SS 4 "); BT.print("\t");
-    BT.print("SS 5 "); BT.print("\t");
-    BT.print("SS 6 "); BT.print("\t");
-    BT.print("TOTAL"); BT.print("\t");
-    BT.print("Stages Done"); BT.print("\t");
-    BT.println();
+    BT.print(F("FIRST NAME \tSURNAME \tWATCH NUMBER \tSS 1 \tSS 2 \tSS 3 \tSS 4 \tSS 5 \tSS 6 \tTOTAL \tStages Done\t\n"));
+    //BT.println();
   }
 }
 
 
 // Display fucntion during config loop
 void configDisplay( unsigned long timeLeftMs)   {
-     // 1st line of display
+    extern unsigned char TinyFont[];      // for 5110 LCD display
+    extern unsigned char SmallFont[];     // for 5110 LCD display
+    extern unsigned char MediumNumbers[]; // for 5110 LCD display
+    extern unsigned char BigNumbers[];    // for 5110 LCD display
+
+  // 1st line of display
     myGLCD.invert (true); //turn on inverted screen 
     myGLCD.setFont(SmallFont);
     String msg = VERSION;
@@ -424,23 +382,25 @@ void configDisplay( unsigned long timeLeftMs)   {
     myGLCD.print(msg,LEFT,0);       
 
    //2nd line  Display
+    msg = "DO NOT TAG!";
     myGLCD.setFont(SmallFont);          
-    myGLCD.print(("DO NOT TAG!"),CENTER,10);         
+    myGLCD.print(msg,CENTER,10);         
 
     //3rd line  Display
     myGLCD.setFont(SmallFont);          
     myGLCD.print((thisPod.progname),CENTER,20);        
  
     // 4th Line
+    msg = "Swipe2Change";
     myGLCD.setFont(SmallFont);
-    myGLCD.print("Swipe2Change",CENTER,30);
+    myGLCD.print(msg,CENTER,30);
 
     // 5th Line
-    String timeMsg = "Done in ";
+    msg = "Done in ";
     unsigned long ms = (timeLeftMs % 1000)/100;
-    timeMsg = timeMsg + (timeLeftMs/1000) + "." + ms + "s";
+    msg = msg + (timeLeftMs/1000) + "." + ms + "s";
     myGLCD.setFont(SmallFont);
-    myGLCD.print(timeMsg,LEFT,40);
+    myGLCD.print(msg,LEFT,40);
 
     myGLCD.update();
     myGLCD.clrScr();    

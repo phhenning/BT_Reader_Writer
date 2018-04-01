@@ -54,11 +54,11 @@ struct BTProg {
 
 
 struct BTProg BTProgList [LIST_SIZE_BT] = {
-	{ 1 , "BT WRITE2WATCH"},
+	{ 1 , "BT WRITE2WATC)H"},
 	{ 2 , "BT D/L RESULTS"}, 
 	{ 3, "BT WIPE ALL" },
-	{ 4, "BT WIPE TIMES"},
-    };
+	{ 4, "BT WIPE TIMES"}
+};
 
 // BELOW IS STATION/POD IDENTIFICATION!
 
@@ -67,7 +67,7 @@ struct podType {
   char podID[16]; 
 } ;
 
-#define LIST_SIZE_PODS 16
+#define LIST_SIZE_PODS 12
 struct podType podTypeList [LIST_SIZE_PODS] = {
   { 8 , "Stage 1 Start"},
   { 9 , "Stage 1 Finish"}, 
@@ -81,11 +81,7 @@ struct podType podTypeList [LIST_SIZE_PODS] = {
   { 25, "Stage 5 Finish"},
   { 28, "Stage 6 Start" },
   { 29, "Stage 6 Finish"},
-  { 32, "Stage 7 Start" },
-  { 33, "Stage 7 Finish"},
-  { 36, "Stage 8 Start" },
-  { 37, "Stage 8 Finish"},
-    };
+  };
        
 // variouse values
 #define CONFIG_TIME_MS 10000  
@@ -95,25 +91,25 @@ struct podType podTypeList [LIST_SIZE_PODS] = {
 struct tagId {
   int block;
   char description[16];
+};
 
-}
 #define LIST_SIZE_ID 3
 struct tagId tagIdList [LIST_SIZE_ID] = {
   { 1, "First Name"},
   { 2, "Surname"   },
   { 4, "Tag Number"}
-}
+};
 
 // read buffer has 2 crc bytes
 #define TAG_RD_BUF_SIZE 18
 #define TAG_WR_BUF_SIZE 16
 
-#define STATUS_OK             0
-#define STATUS_ERROR          1
-#define STATUS_COLLISION      2
-#define STATUS_TIMEOUT        3
-#define STATUS_NO_ROOM        4
-#define STATUS_INTERNAL_ERROR 5
-#define STATUS_INVALID        6
-#define STATUS_CRC_WRONG      7
-#define STATUS_MIFARE_NACK    8
+#define OK 0
+#define ERROR          1
+//#define STATUS_COLLISION      2
+//#define STATUS_TIMEOUT        3
+//#define STATUS_NO_ROOM        4
+//#define STATUS_INTERNAL_ERROR 5
+//#define STATUS_INVALID        6
+//#define STATUS_CRC_WRONG      7
+//#define STATUS_MIFARE_NACK    8
