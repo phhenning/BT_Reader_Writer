@@ -1,0 +1,366 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>phenning</Author>
+  <LastAuthor>Pieter Henning</LastAuthor>
+  <Created>2018-02-02T16:48:53Z</Created>
+  <Version>15.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>8310</WindowHeight>
+  <WindowWidth>19140</WindowWidth>
+  <WindowTopX>1620</WindowTopX>
+  <WindowTopY>0</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="PIN LAYOUT">
+  <Table ss:ExpandedColumnCount="13" ss:ExpandedRowCount="32" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultRowHeight="15">
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">Arduino</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">OTHER</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">MFRC522</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">NOKIA 5110</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">RTC</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">HC-05</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">Pro Mini</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">COMPONENTS</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">Reader</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">LCD </Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">DS3231</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">Bluetooth</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">Pin</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">Pin</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">Pin</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">Pin</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">Pin</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">Pin</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">RAW</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">(BATTERY)</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">GND</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">GND</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">GND</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">GND</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">GND</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">RST</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">VCC</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">3.3V </Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">VCC</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">VCC</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">VCC</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A5</Data></Cell>
+    <Cell><Data ss:Type="String">scl</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">SCL</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A4</Data></Cell>
+    <Cell><Data ss:Type="String">sda</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">SDA</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A3</Data></Cell>
+    <Cell><Data ss:Type="String">config</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A2</Data></Cell>
+    <Cell><Data ss:Type="String">V_meas</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A1</Data></Cell>
+    <Cell><Data ss:Type="String">LCD backlight</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A0</Data></Cell>
+    <Cell><Data ss:Type="String">LED</Data></Cell>
+    <Cell><Data ss:Type="String">(LED1)</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A6</Data></Cell>
+    <Cell><Data ss:Type="String">****</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">A7</Data></Cell>
+    <Cell><Data ss:Type="String">****</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D13</Data></Cell>
+    <Cell><Data ss:Type="String">sck</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">SCK</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D12</Data></Cell>
+    <Cell><Data ss:Type="String">miso</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">MISO</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D11</Data></Cell>
+    <Cell><Data ss:Type="String">mosi</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">MOSI</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D10</Data></Cell>
+    <Cell><Data ss:Type="String">SS</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">SDA(SS)</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D9 </Data></Cell>
+    <Cell><Data ss:Type="String">rst</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">RST </Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D8</Data></Cell>
+    <Cell><Data ss:Type="String">CE</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">CE </Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D7</Data></Cell>
+    <Cell><Data ss:Type="String">rst</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">RST</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D6</Data></Cell>
+    <Cell><Data ss:Type="String">dc</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">DC</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D5</Data></Cell>
+    <Cell><Data ss:Type="String">Din</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">Din</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D4</Data></Cell>
+    <Cell><Data ss:Type="String">clk</Data></Cell>
+    <Cell><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">CLK</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String"> *</Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D3</Data></Cell>
+    <Cell><Data ss:Type="String">led</Data></Cell>
+    <Cell><Data ss:Type="String">(LED)</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">* </Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">D2</Data></Cell>
+    <Cell><Data ss:Type="String">buzzer</Data></Cell>
+    <Cell><Data ss:Type="String">(BUZZER)</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">* </Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">GND</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">* </Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">RST</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">***</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">* </Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">RXI</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">TXD</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="String">* </Data></Cell>
+    <Cell ss:Index="3"><Data ss:Type="String">TXD</Data></Cell>
+    <Cell ss:Index="5"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="7"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="9"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="11"><Data ss:Type="String">***</Data></Cell>
+    <Cell ss:Index="13"><Data ss:Type="String">RXD</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.75" x:Left="0.7" x:Right="0.7" x:Top="0.75"/>
+   </PageSetup>
+   <Selected/>
+   <TopRowVisible>1</TopRowVisible>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>1</ActiveRow>
+     <ActiveCol>3</ActiveCol>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
