@@ -1,0 +1,322 @@
+format_version: '2'
+name: My Project
+versions:
+  api: '1.0'
+  backend: 1.5.122
+  commit: 820baecf7dd115d94b0d42ee3b0b9d6ba2da7113
+  content: 1.0.1498
+  content_pack_name: acme-packs-all
+  format: '2'
+  frontend: 1.5.1877
+board:
+  identifier: CustomBoard
+  device: ATmega328P-AU
+details: null
+application: null
+middlewares: {}
+drivers:
+  CPU:
+    user_label: CPU
+    definition: 'Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::CPU::driver_config_definition::SYSCTRL::Drivers:SYSCTRL:'
+    functionality: System
+    api: 'Drivers:SYSCTRL:'
+    configuration:
+      async_input_speed: 32768
+      clkadc_oscillator: Input clock
+      clkasy_oscillator: Async input clock
+      clkcpu_oscillator: Input clock
+      clkio_oscillator: Input clock
+      clkptc_oscillator: Input clock
+      cpu_clock_source: CLKcpu
+      cpu_sreg_i: false
+      enable_async_input: true
+      enable_clkadc: true
+      enable_clkasy: true
+      enable_clkcpu: true
+      enable_clkio: true
+      enable_clkptc: true
+      enable_core_clock: true
+      enable_input: true
+      input_speed: 8000000
+      pm_ivsel: Interrupt vector placed at the beginning of main FLASH memory
+      pm_pud: false
+      pm_se: true
+      pm_sm: Power Save
+      prescaler_divider: '1'
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: Core
+          input: Core
+          external: false
+          external_frequency: 0
+        configuration: {}
+  EXTERNAL_IRQ_0:
+    user_label: EXTERNAL_IRQ_0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::EXINT::driver_config_definition::EXINT::Drivers:EXINT:Init
+    functionality: External_IRQ
+    api: Drivers:EXINT:Init
+    configuration:
+      exint_isc0: The low level of ISC0 generates an interrupt request
+      exint_isc1: The low level of ISC1 generates an interrupt request
+      inc_isr_harness: false
+    optional_signals:
+    - identifier: EXTERNAL_IRQ_0:PCINT/18
+      pad: PD2
+      mode: Enabled
+      configuration: null
+      definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::optional_signal_definition::EXINT.PCINT.18
+      name: EXINT/PCINT/18
+      label: PCINT/18
+    variant: null
+    clocks:
+      domain_group: null
+  SPI_0:
+    user_label: SPI_0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::SPI::driver_config_definition::SPI.Master.Interrupt::Drivers:SPI:Basic
+    functionality: SPI
+    api: Drivers:SPI:Basic
+    configuration:
+      spi_cpha: Sample on leading edge
+      spi_cpol: SCK is low when idle
+      spi_dord: MSB transmitted first
+      spi_mstr: Master mode
+      spi_open_close: true
+      spi_spe: true
+      spi_spie: true
+      spi_spr: fosc/4
+    optional_signals: []
+    variant:
+      specification: MASTER=1
+      required_signals:
+      - name: SPI/MISO
+        pad: PB4
+        label: MISO
+      - name: SPI/MOSI
+        pad: PB3
+        label: MOSI
+      - name: SPI/SCK
+        pad: PB5
+        label: SCK
+    clocks:
+      domain_group:
+        nodes:
+        - name: SPI
+          input: CLKio
+          external: false
+          external_frequency: 0
+        configuration:
+          spi_clock_source: CLKio
+  TIMER_0:
+    user_label: TIMER_0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::TC1::driver_config_definition::TC16.Mode.0.Normal::Drivers:TC16:Init
+    functionality: Timer
+    api: Drivers:TC16:Init
+    configuration:
+      inc_isr_harness: false
+      tc16_coma: Normal port operation, OCA disconnected
+      tc16_comb: Normal port operation, OCB disconnected
+      tc16_cs: No clock source (Timer/Counter stopped)
+      tc16_ices: Falling edge will trigger input capture
+      tc16_icie: false
+      tc16_icnc: false
+      tc16_icr: 0
+      tc16_ociea: false
+      tc16_ocieb: false
+      tc16_orca: 0
+      tc16_orcb: 0
+      tc16_psrasy: false
+      tc16_psrsync: false
+      tc16_toie: false
+      tc16_tsm: false
+    optional_signals: []
+    variant: null
+    clocks:
+      domain_group:
+        nodes:
+        - name: TC16
+          input: CLKio
+          external: false
+          external_frequency: 0
+        configuration:
+          tc16_clock_source: CLKio
+  USART_0:
+    user_label: USART_0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::USART0::driver_config_definition::Async.Polled.Mode::Drivers:USART:Basic
+    functionality: USART
+    api: Drivers:USART:Basic
+    configuration:
+      printf_support: false
+      usart_baud_rate: 9600
+      usart_mpcm: false
+      usart_rxcie: true
+      usart_rxen: true
+      usart_txen: true
+      usart_ucpha: Sample data on the first edge of XCK
+      usart_ucpol: false
+      usart_ucsz: 8-bit
+      usart_udord: MSB is transmitted first
+      usart_udrie: false
+      usart_upm: Disabled
+      usart_usbs: 1-bit
+    optional_signals: []
+    variant:
+      specification: UMSEL=0
+      required_signals:
+      - name: USART0/RXD
+        pad: PD0
+        label: RXD
+      - name: USART0/TXD
+        pad: PD1
+        label: TXD
+    clocks:
+      domain_group:
+        nodes:
+        - name: USART
+          input: CLKio
+          external: false
+          external_frequency: 0
+        configuration:
+          usart_clock_source: CLKio
+pads:
+  LED_D3:
+    name: PD3
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD3
+    mode: Digital output
+    user_label: LED_D3
+    configuration: null
+  LCD_Clk:
+    name: PD4
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD4
+    mode: Digital output
+    user_label: LCD_Clk
+    configuration: null
+  LCD_Data:
+    name: PD5
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD5
+    mode: Digital output
+    user_label: LCD_Data
+    configuration: null
+  LCD_Data_Cmd:
+    name: PD6
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD6
+    mode: Digital output
+    user_label: LCD_Data_Cmd
+    configuration: null
+  LCD_En:
+    name: PD7
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD7
+    mode: Digital output
+    user_label: LCD_En
+    configuration:
+      pad_initial_level: High
+  UART_Ard_2_Mod:
+    name: PB0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PB0
+    mode: Digital output
+    user_label: UART_Ard_2_Mod
+    configuration:
+      pad_initial_level: High
+  UART_Mod_2_ard:
+    name: PB1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PB1
+    mode: Digital input
+    user_label: UART_Mod_2_ard
+    configuration: null
+  RFID_CS:
+    name: PB2
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PB2
+    mode: Digital output
+    user_label: RFID_CS
+    configuration: null
+  RFID_MOsi:
+    name: PB3
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PB3
+    mode: Digital output
+    user_label: RFID_MOsi
+    configuration: null
+  RFID_MISO:
+    name: PB4
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PB4
+    mode: Digital input
+    user_label: RFID_MISO
+    configuration: null
+  RFID_SCK:
+    name: PB5
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PB5
+    mode: Digital output
+    user_label: RFID_SCK
+    configuration: null
+  Vmeas:
+    name: ADC7
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::ADC7
+    mode: Analog
+    user_label: Vmeas
+    configuration: null
+  LED_A0:
+    name: PC0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC0
+    mode: Digital output
+    user_label: LED_A0
+    configuration: null
+  LED_rstB:
+    name: PC1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC1
+    mode: Digital output
+    user_label: LED_rstB
+    configuration:
+      pad_initial_level: High
+  Sqr:
+    name: PC2
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC2
+    mode: Digital input
+    user_label: Sqr
+    configuration:
+      pad_pull_config: Pull-up
+  config:
+    name: PC3
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC3
+    mode: Digital input
+    user_label: config
+    configuration:
+      pad_pull_config: Pull-up
+  sda:
+    name: PC4
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC4
+    mode: Peripheral IO
+    user_label: sda
+    configuration: null
+  scl:
+    name: PC5
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC5
+    mode: Digital output
+    user_label: scl
+    configuration: null
+  Reset:
+    name: PC6
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PC6
+    mode: Digital input
+    user_label: Reset
+    configuration:
+      pad_pull_config: Pull-up
+  PD0:
+    name: PD0
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD0
+    mode: Digital input
+    user_label: PD0
+    configuration: null
+  PD1:
+    name: PD1
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD1
+    mode: Digital output
+    user_label: PD1
+    configuration: null
+  PD2:
+    name: PD2
+    definition: Atmel:ATMega48_88_168_328_drivers:1.0.0::ATmega328P-AU::pad::PD2
+    mode: Digital input
+    user_label: PD2
+    configuration: null
+toolchain_options: []
